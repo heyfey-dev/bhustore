@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { formatPrice } from "../../utils/helpers";
 import styled from "styled-components";
 import { no_image } from "../../utils/images";
+import queryString from "query-string";
 
 const ImageContainer = styled.div`
   overflow: hidden;
@@ -76,8 +77,13 @@ const SingleProduct = () => {
   const navigate = useNavigate();
   const [qty, setQty] = useState(1);
   const { data: product } = useSelector((state) => state.modal);
+  // console.log(product)
   const [imgOffSet, setImgOffSet] = useState(0);
   const [hasCopied, setHasCopied] = useState(false);
+
+  const queryParams = queryString.parse(window.location.search);
+  const { prodID } = queryParams;
+
   const handleImgChange = (direction) => {
     const imgLength = product?.images && product.images.length - 1;
 
@@ -117,6 +123,7 @@ const SingleProduct = () => {
     let totalPrice = qty * product.productPrice;
     const tempProduct = {
       ...product,
+      prodID,
       quantity: qty,
       totalPrice,
     };
@@ -220,7 +227,7 @@ const SingleProduct = () => {
                 <button
                   type="button"
                   className="btn-primary add-to-cart-btn"
-                  onClick={() => addToCartHandler(product)}
+                  onClick={() => {addToCartHandler(product); console.log(product)}}
                 >
                   <span className="btn-icon">
                     <i className="fas fa-cart-shopping"></i>
