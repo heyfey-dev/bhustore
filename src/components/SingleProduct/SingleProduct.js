@@ -227,7 +227,10 @@ const SingleProduct = () => {
                 <button
                   type="button"
                   className="btn-primary add-to-cart-btn"
-                  onClick={() => {addToCartHandler(product); console.log(product)}}
+                  onClick={() => {
+                    addToCartHandler(product);
+                    console.log(product);
+                  }}
                 >
                   <span className="btn-icon">
                     <i className="fas fa-cart-shopping"></i>
@@ -236,7 +239,13 @@ const SingleProduct = () => {
                 </button>
                 {product.seller.whatsappLink && (
                   <button className="btn-primary-outline add-to-cart-btn">
-                    <a href={"https://" + product.seller.whatsappLink}>
+                    <a
+                      href={
+                        product.seller.whatsappLink.includes("https://")
+                          ? product.seller.whatsappLink
+                          : "https://" + product.seller.whatsappLink
+                      }
+                    >
                       <span className="btn-icon">
                         <i
                           style={{ fontSize: "2rem" }}
