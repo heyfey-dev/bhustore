@@ -59,7 +59,7 @@ export const {
 export default categorySlice.reducer;
 
 export const fetchCategories = () => {
-    const CATEGORIES = ['accessories','bags','clothes', 'decors', 'drinks','food and snacks', 'shoes','sports', 'perfumes and deodorants']
+    const CATEGORIES = ['accessories','bags', 'beauty and makeup', 'beauty and care','clothes', 'caps', 'decors', 'drinks','food and snacks', 'gadgets', 'laptops','shoes', 'phones','sports', 'perfumes and deodorants']
     return async function fetchCategoryThunk(dispatch) {
         dispatch(setStatus(STATUS.LOADING));
         try {
