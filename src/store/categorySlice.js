@@ -64,6 +64,7 @@ export const fetchCategories = () => {
         dispatch(setStatus(STATUS.LOADING));
         try {
             const data = []
+            
             const colRef = collection(db, "categories");
             const docsSnap = await getDocs(colRef);
             docsSnap.forEach(doc => {
