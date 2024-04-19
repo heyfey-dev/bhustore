@@ -47,6 +47,7 @@ const Navbar = () => {
   const [searchWord, setSearchWord] = useState('');
   const [showSearchBar, setShowSearchBar] = useState(false);
   const {data: categories} = useSelector((state) => state.category);
+  console.log(categories)
   const {totalItems} = useSelector((state => state.cart));
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -112,7 +113,7 @@ const Navbar = () => {
                 <i className='fas fa-times'></i>
               </button>
               {
-                categories.map(category => (
+                categories.slice(0,7).map(category => (
                   <li key = {category.id}><Link to = {`/category/${category.id}`} className = "nav-link text-white" onClick={() => setIsSidebarOpen(false)}>{category.name}</Link></li>
                 ))
               }
