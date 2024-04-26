@@ -73,9 +73,6 @@ export const fetchCategories = () => {
                     id: doc.id
                 });
             });
-
-            // console.log(data)
-
             dispatch(setCategories(data.filter((d)=>CATEGORIES.includes(d.name.trim()))));
             dispatch(setStatus(STATUS.IDLE));
         } catch (error) {
