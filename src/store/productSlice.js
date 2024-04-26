@@ -35,7 +35,6 @@ export const fetchProducts = () => {
             docsSnap.forEach(doc => {
                 data.push({ ...doc.data(), id: doc.id });
             });
-
             dispatch(setProducts(shuffleArray(data)));
             dispatch(setStatus(STATUS.IDLE));
         } catch(error){
