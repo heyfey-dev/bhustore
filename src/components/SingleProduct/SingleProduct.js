@@ -229,7 +229,7 @@ const SingleProduct = () => {
                   className="btn-primary add-to-cart-btn"
                   onClick={() => {
                     addToCartHandler(product);
-                    console.log(product);
+                    // console.log(product);
                   }}
                 >
                   <span className="btn-icon">

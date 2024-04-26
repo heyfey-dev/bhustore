@@ -4,8 +4,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import {
   removeFromCart,
-  toggleCartQty,
-  getCartTotal,
   clearCart,
 } from "../../store/cartSlice";
 import { formatPrice } from "../../utils/helpers";
@@ -46,17 +44,12 @@ const CartPage = () => {
   const dispatch = useDispatch();
   const {
     data: cartProducts,
-    totalItems,
-    totalAmount,
   } = useSelector((state) => state.cart);
 
+  console.log(cartProducts)
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-  useEffect(() => {
-    dispatch(getCartTotal());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [useSelector((state) => state.cart)]);
 
   const emptyCartMsg = <h4 className="text-red fw-6">No items found!</h4>;
 
@@ -73,7 +66,7 @@ const CartPage = () => {
                 </span>
               </Link>
             </li>
-            <li>Cart</li>
+            <li>Saved Items</li>
           </ul>
         </div>
       </div>
@@ -81,7 +74,7 @@ const CartPage = () => {
         <div className="container">
           <div className="section-title bg-ghost-white">
             <h3 className="text-uppercase fw-7 text-regal-blue ls-1">
-              My Cart
+              Products
             </h3>
           </div>
           {cartProducts.length === 0 ? (
@@ -120,54 +113,12 @@ const CartPage = () => {
                         <h6 className="fs-16 fw-5 text-light-blue">
                           {cartProduct.productName}
                         </h6>
-                        <div className="qty flex">
-                          <span className="text-light-blue qty-text">
-                            Qty:{" "}
-                          </span>
-                          <div className="qty-change flex">
-                            <button
-                              type="button"
-                              className="qty-dec fs-14"
-                              onClick={() =>
-                                dispatch(
-                                  toggleCartQty({
-                                    id: cartProduct.id,
-                                    type: "DEC",
-                                  })
-                                )
-                              }
-                            >
-                              <i className="fas fa-minus text-light-blue"></i>
-                            </button>
-                            <span className="qty-value flex flex-center">
-                              {cartProduct.quantity}
-                            </span>
-                            <button
-                              type="button"
-                              className="qty-inc fs-14 text-light-blue"
-                              onClick={() =>
-                                dispatch(
-                                  toggleCartQty({
-                                    id: cartProduct.id,
-                                    type: "INC",
-                                  })
-                                )
-                              }
-                            >
-                              <i className="fas fa-plus"></i>
-                            </button>
-                          </div>
-                        </div>
+                      
                         <div className="flex flex-between">
                           <div className="text-pine-green fw-4 fs-15 price">
                             Price : {formatPrice(cartProduct.productPrice)}
                           </div>
-                          <div className="sub-total fw-6 fs-18 text-regal-blue">
-                            <span>Sub Total: </span>
-                            <span className="">
-                              {formatPrice(cartProduct.totalPrice)}
-                            </span>
-                          </div>
+                     
                         </div>
                         <ContactBox className="flex">
                           <span className="text-light-blue qty-text">
@@ -186,43 +137,6 @@ const CartPage = () => {
                 >
                   <span className="fs-16">Clear Cart</span>
                 </button>
-              </div>
-              <div className="cart-right bg-white">
-                <div className="cart-summary text-light-blue">
-                  <div className="cart-summary-title">
-                    <h6 className="fs-20 fw-5">Order Summary</h6>
-                  </div>
-                  <ul className="cart-summary-info">
-                    <li className="flex flex-between">
-                      <span className="fw-4">
-                        Selected {totalItems} items(s) Price
-                      </span>
-                      <span className="fw-7">{formatPrice(totalAmount)}</span>
-                    </li>
-                    <li className="flex flex-between">
-                      <span className="fw-4">Discount</span>
-                      <span className="fw-7">
-                        <span className="fw-5 text-red">-&nbsp;</span>
-                        {formatPrice(0)}
-                      </span>
-                    </li>
-                    {/* <li className='flex flex-between'>
-                                            <span className='fw-4'>Delivery Cost</span>
-                                            <span className='fw-7'>
-                                                <span className='fw-5 text-gold'>+&nbsp;</span>{formatPrice(deliveryCharge)}
-                                            </span>
-                                        </li> */}
-                  </ul>
-                  <div className="cart-summary-total flex flex-between fs-18">
-                    <span className="fw-6">Grand Total: </span>
-                    <span className="fw-6">{formatPrice(totalAmount)}</span>
-                  </div>
-                  <div className="cart-summary-btn">
-                    <button type="button" className="btn-secondary">
-                      Contact Seller to Buy
-                    </button>
-                  </div>
-                </div>
               </div>
             </div>
           )}

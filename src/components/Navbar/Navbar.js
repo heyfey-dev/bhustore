@@ -47,7 +47,7 @@ const Navbar = () => {
   const [searchWord, setSearchWord] = useState('');
   const [showSearchBar, setShowSearchBar] = useState(false);
   const {data: categories} = useSelector((state) => state.category);
-  console.log(categories)
+  // console.log(categories)
   const {totalItems} = useSelector((state => state.cart));
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
