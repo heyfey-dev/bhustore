@@ -3,7 +3,7 @@ import "./CartPage.scss";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import {
-  removeFromCart,
+  removeFromCart, 
   clearCart,
 } from "../../store/cartSlice";
 import { formatPrice } from "../../utils/helpers";
@@ -109,7 +109,7 @@ const CartPage = () => {
                         </button>
                       </div>
 
-                      <div className="cart-item-info">
+                      <div className="cart-item-info" style={{display: 'flex', flexDirection: 'column', justifyContent: "center", gap: '.8rem'}}>
                         <h6 className="fs-16 fw-5 text-light-blue">
                           {cartProduct.productName}
                         </h6>

@@ -8,6 +8,7 @@ import Footer from "./components/Footer/Footer";
 import {Provider} from 'react-redux';
 import store from "./store/store";
 import styled from 'styled-components';
+import FloatingElement from './components/FloatingElement/FloatingElement';
 
 const Divider = styled.div`
   margin-top: 125px;
@@ -30,6 +31,7 @@ function App() {
             <Route path = "/search/:searchId" element = {<Category />} />
             <Route path = "/cart" element = {<Cart />} />
           </Routes>
+          <FloatingElement />
           <Footer />
         </BrowserRouter>
       </Provider>

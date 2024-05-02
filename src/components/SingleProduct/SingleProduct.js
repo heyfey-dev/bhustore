@@ -233,9 +233,9 @@ const SingleProduct = () => {
                   }}
                 >
                   <span className="btn-icon">
-                    <i className="fas fa-cart-shopping"></i>
+                    <i class="fa-solid fa-heart"></i>
                   </span>
-                  <span className="btn-text">Add To Cart</span>
+                  <span className="btn-text">Save Item</span>
                 </button>
                 {product.seller.whatsappLink && (
                   <button className="btn-primary-outline add-to-cart-btn">
