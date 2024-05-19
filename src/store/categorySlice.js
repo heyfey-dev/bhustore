@@ -113,7 +113,7 @@ export const fetchProductsByCategory = (categoryID, dataType, isSearchPage = fal
                 dispatch(setCategoriesStatusAll(STATUS.IDLE));
             }
             if (dataType === 'single') {
-                dispatch(setCategoriesProductSingle(shuffleArray(data).slice(0, 20)));
+                dispatch(setCategoriesProductSingle(shuffleArray(data).slice(0, 50)));
                 dispatch(setCategoriesStatusSingle(STATUS.IDLE));
             }
         } catch (error) {

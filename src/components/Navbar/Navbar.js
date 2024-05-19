@@ -151,14 +151,14 @@ const Navbar = () => {
               >
                 <i className="fas fa-times"></i>
               </button>
-              {categories.slice(0, 7).map((category) => (
+              {categories.slice(0, 8).map((category) => (
                 <li key={category.id}>
                   <Link
                     to={`/category/${category.id}`}
                     className="nav-link text-white"
                     onClick={() => setIsSidebarOpen(false)}
                   >
-                    {category.name}
+                    {category.name[0].toUpperCase()+category.name.slice(1)}
                   </Link>
                 </li>
               ))}

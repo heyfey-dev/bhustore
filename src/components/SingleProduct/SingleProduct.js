@@ -141,9 +141,7 @@ const SingleProduct = () => {
   const handleCopySellerNumber = () => {
     navigator.clipboard.writeText(product.seller.number);
     setHasCopied(true);
-    setTimeout(() => {
-      setHasCopied(false);
-    }, 1000);
+   
   };
 
   return (
