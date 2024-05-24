@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from "react";
 import "./SingleProduct.scss";
 import { useSelector, useDispatch } from "react-redux";
 import { setIsModalVisible } from "../../store/modalSlice";
@@ -8,6 +9,8 @@ import { formatPrice } from "../../utils/helpers";
 import styled from "styled-components";
 import { no_image } from "../../utils/images";
 import queryString from "query-string";
+import { setDoc, doc } from "firebase/firestore";
+import { db } from "../../base";
 
 const ImageContainer = styled.div`
   overflow: hidden;
@@ -77,12 +80,37 @@ const SingleProduct = () => {
   const navigate = useNavigate();
   const [qty, setQty] = useState(1);
   const { data: product } = useSelector((state) => state.modal);
-  // console.log(product)
   const [imgOffSet, setImgOffSet] = useState(0);
   const [hasCopied, setHasCopied] = useState(false);
 
   const queryParams = queryString.parse(window.location.search);
   const { prodID } = queryParams;
+
+  useEffect(() => {
+    const docRef = doc(db, "products", prodID);
+
+    if (product.analytics) {
+      // console.log(product);
+      const views = product.analytics.views + 1;
+      setDoc(docRef, { analytics: { views } }, { merge: true })
+        .then((docRef) => {
+          console.log("Document Field has been updated successfully");
+          // setUpdateTrigger((prev) => !prev);
+          // resetData();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      setDoc(docRef, { analytics: { views: 1 } }, { merge: true })
+        .then((docRef) => {
+          console.log("Document Field has been updated successfully");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, []);
 
   const handleImgChange = (direction) => {
     const imgLength = product?.images && product.images.length - 1;
@@ -141,7 +169,6 @@ const SingleProduct = () => {
   const handleCopySellerNumber = () => {
     navigator.clipboard.writeText(product.seller.number);
     setHasCopied(true);
-   
   };
 
   return (
@@ -235,7 +262,7 @@ const SingleProduct = () => {
                   </span>
                   <span className="btn-text">Save Item</span>
                 </button>
-                {product.seller.whatsappLink && (
+                {product.seller?.whatsappLink && (
                   <button className="btn-primary-outline add-to-cart-btn">
                     <a
                       href={
@@ -254,7 +281,7 @@ const SingleProduct = () => {
                     </a>
                   </button>
                 )}
-                {!product.seller.whatsappLink && (
+                {!product.seller?.whatsappLink && (
                   <button
                     type="button"
                     className="btn-primary-outline add-to-cart-btn"
