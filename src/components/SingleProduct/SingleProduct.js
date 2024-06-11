@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import "./SingleProduct.scss";
 import { useSelector, useDispatch } from "react-redux";
@@ -75,45 +74,46 @@ const ActionContainer = styled.div`
   @media only screen and (max-width: 600px) {
   }
 `;
+
 const SingleProduct = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [qty, setQty] = useState(1);
-  const { data: product } = useSelector((state) => state.modal);
+  const product = useSelector((state) => state.modal.data); // Ensure correct selector
   const [imgOffSet, setImgOffSet] = useState(0);
   const [hasCopied, setHasCopied] = useState(false);
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
 
   const queryParams = queryString.parse(window.location.search);
   const { prodID } = queryParams;
 
   useEffect(() => {
+    if (!product) return; // Ensure product is not null or undefined
+
     const docRef = doc(db, "products", prodID);
 
     if (product.analytics) {
-      // console.log(product);
       const views = product.analytics.views + 1;
       setDoc(docRef, { analytics: { views } }, { merge: true })
-        .then((docRef) => {
+        .then(() => {
           console.log("Document Field has been updated successfully");
-          // setUpdateTrigger((prev) => !prev);
-          // resetData();
         })
         .catch((error) => {
           console.log(error);
         });
     } else {
       setDoc(docRef, { analytics: { views: 1 } }, { merge: true })
-        .then((docRef) => {
+        .then(() => {
           console.log("Document Field has been updated successfully");
         })
         .catch((error) => {
           console.log(error);
         });
     }
-  }, []);
+  }, [product, prodID]);
 
   const handleImgChange = (direction) => {
-    const imgLength = product?.images && product.images.length - 1;
+    const imgLength = product?.images?.length - 1;
 
     if (direction === "right") {
       if (imgOffSet >= imgLength * 100) {
@@ -131,20 +131,11 @@ const SingleProduct = () => {
   };
 
   const increaseQty = () => {
-    setQty((prevQty) => {
-      let newQty = prevQty + 1;
-      return newQty;
-    });
+    setQty((prevQty) => prevQty + 1);
   };
 
   const decreaseQty = () => {
-    setQty((prevQty) => {
-      let newQty = prevQty - 1;
-      if (newQty < 1) {
-        newQty = 1;
-      }
-      return newQty;
-    });
+    setQty((prevQty) => (prevQty > 1 ? prevQty - 1 : 1));
   };
 
   const addToCartHandler = (product) => {
@@ -171,6 +162,21 @@ const SingleProduct = () => {
     setHasCopied(true);
   };
 
+  const toggleDescription = () => {
+    setIsDescriptionExpanded((prev) => !prev);
+  };
+
+  const getDescriptionText = () => {
+    const maxLength = 45;
+    if (product.description.length <= maxLength || isDescriptionExpanded) {
+      return product.description;
+    } else {
+      return product.description.slice(0, maxLength) + "...";
+    }
+  };
+
+  if (!product) return null; 
+
   return (
     <div className="overlay-bg" onClick={modalOverlayHandler}>
       <div className="product-details-modal bg-white">
@@ -182,83 +188,50 @@ const SingleProduct = () => {
           <i className="fas fa-times"></i>
         </button>
         <div className="details-content grid">
-          {/* details left */}
           <div className="details-left">
             <ImageContainer offSet={imgOffSet} className="details-img">
-              {product?.images ? (
+              {product.images && product.images.length ? (
                 product.images.map((img, i) => (
                   <img key={i} src={img} alt="product" />
                 ))
               ) : (
                 <img src={no_image} alt="product" />
               )}
-              {product?.images && product.images.length !== 1 && (
-                <div
-                  onClick={() => handleImgChange("left")}
-                  className="left-arrow"
-                >
-                  <span>{"<"}</span>
-                </div>
-              )}
-              {product?.images && product.images.length !== 1 && (
-                <div
-                  onClick={() => handleImgChange("right")}
-                  className="right-arrow"
-                >
-                  <span>{">"}</span>
-                </div>
+              {product.images && product.images.length !== 1 && (
+                <>
+                  <div
+                    onClick={() => handleImgChange("left")}
+                    className="left-arrow"
+                  >
+                    <span>{"<"}</span>
+                  </div>
+                  <div
+                    onClick={() => handleImgChange("right")}
+                    className="right-arrow"
+                  >
+                    <span>{">"}</span>
+                  </div>
+                </>
               )}
             </ImageContainer>
           </div>
-          {/* detials right */}
           <div className="details-right">
             <div className="details-info">
               <h3 className="title text-regal-blue fs-22 fw-5">
                 {product.productName}
               </h3>
-              <TextContainer className="description text-pine-green">
-                {product.description &&
-                  product.description.split("\n").map((d, i) => (
-                    <p key={i} className="">
-                      {d}
-                    </p>
-                  ))}
-              </TextContainer>
-
               <div className="price fw-7 fs-24">
                 Price: {formatPrice(product.productPrice)}
               </div>
-              <div className="qty flex">
-                <span className="text-light-blue qty-text">Qty: </span>
-                <div className="qty-change flex">
-                  <button
-                    type="button"
-                    className="qty-dec fs-14"
-                    onClick={() => decreaseQty()}
-                  >
-                    <i className="fas fa-minus text-light-blue"></i>
-                  </button>
-                  <span className="qty-value flex flex-center">{qty}</span>
-                  <button
-                    type="button"
-                    className="qty-inc fs-14 text-light-blue"
-                    onClick={() => increaseQty()}
-                  >
-                    <i className="fas fa-plus"></i>
-                  </button>
-                </div>
-              </div>
+
               <ActionContainer>
                 <button
                   type="button"
                   className="btn-primary add-to-cart-btn"
-                  onClick={() => {
-                    addToCartHandler(product);
-                    // console.log(product);
-                  }}
+                  onClick={() => addToCartHandler(product)}
                 >
                   <span className="btn-icon">
-                    <i class="fa-solid fa-heart"></i>
+                    <i className="fa-solid fa-heart"></i>
                   </span>
                   <span className="btn-text">Save Item</span>
                 </button>
@@ -274,7 +247,7 @@ const SingleProduct = () => {
                       <span className="btn-icon">
                         <i
                           style={{ fontSize: "2rem" }}
-                          class="fa-brands fa-whatsapp"
+                          className="fa-brands fa-whatsapp"
                         ></i>
                       </span>
                       <span className="btn-text">Contact</span>
@@ -288,7 +261,7 @@ const SingleProduct = () => {
                     onClick={handleCopySellerNumber}
                   >
                     <span className="btn-icon">
-                      <i class="fa-regular fa-copy"></i>
+                      <i className="fa-regular fa-copy"></i>
                     </span>
                     <span className="btn-text">
                       {hasCopied ? product.seller.number : "Copy Contact"}
@@ -296,6 +269,22 @@ const SingleProduct = () => {
                   </button>
                 )}
               </ActionContainer>
+              <TextContainer className="description text-pine-green">
+                {product.description &&
+                  getDescriptionText().split("\n").map((d, i) => (
+                    <p key={i} className="">
+                      {d}
+                    </p>
+                  ))}
+                {product.description && product.description.length > 100 && (
+                  <button onClick={toggleDescription} className="read-more-btn">
+                    {isDescriptionExpanded ? "Read Less" : "Read More"}
+                  </button>
+                )}
+              </TextContainer>
+            
+             
+            
             </div>
           </div>
         </div>
